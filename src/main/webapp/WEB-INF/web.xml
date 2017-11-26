@@ -11,26 +11,17 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring-beans.xml</param-value>
     </context-param>
-
-    <servlet>
-        <servlet-name>HelloWorld</servlet-name>
-        <servlet-class>servlet.HelloWorld</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>HelloWorld</servlet-name>
-        <url-pattern>/HelloWorld</url-pattern>
-    </servlet-mapping>
     
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>servlet.LoginServlet</servlet-class>
-    </servlet>
+    <!--<filter>-->
+        <!--<filter-name>AuthenticationFilter</filter-name>-->
+        <!--<filter-class>filter.AuthenticationFilter</filter-class>-->
+    <!--</filter>-->
+    <!---->
+    <!--<filter-mapping>-->
+        <!--<filter-name>AuthenticationFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
 
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern></url-pattern>
-    </servlet-mapping>
 
 
 </web-app>

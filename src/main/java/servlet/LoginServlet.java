@@ -1,27 +1,15 @@
 package servlet;
 
-import bean.NameContainer;
-import domain.User;
+import bean.Authenticator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.Date;
 
-/**
- * Created by xavi on 3/11/17.
- */
-@WebServlet(value = "/login", initParams = {
-        @WebInitParam(name = "location", value = "D:/Uploads"),
-        @WebInitParam(name = "pollo", value = "pera")
-})
+@WebServlet(name = "Login", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
 
@@ -29,24 +17,17 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        context = new ClassPathXmlApplicationContext(
-                "spring-beans.xml");
+        context = new ClassPathXmlApplicationContext("spring-beans.xml");
 
-        NameContainer nameContainer = (NameContainer) context.getBean("nameContainer");
-        nameContainer.setName("prueba");
-        System.out.println(context.getBean("nameContainer"));
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String pollo = getInitParameter("pollo");
-
-
         String html = "<html>\n" +
                 "   <body>\n" +
                 "      <form action = \"login\" method = \"POST\">\n" +
-                "         Correu: <input type = \"text\" name = \"username\">\n" +
+                "         Correu: <input type = \"text\" name = \"email\">\n" +
                 "         <br />\n" +
                 "         Contrasenya: <input type = \"password\" name = \"password\" />\n" +
                 "         <br />\n" +
@@ -63,15 +44,18 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
+        String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        if ("xavi".equals(username) && "1234".equals(password)) {
-            User user = new User();
-            user.setName(username);
-            user.setLoginDate(new Date());
+        Cookie cookie = new Cookie("usuari",email);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        resp.addCookie(cookie);
 
-            req.getSession(true).setAttribute("user", user);
+
+        Authenticator authenticator = (Authenticator) context.getBean("Autenticator");
+
+        if(authenticator.authentic(email, password)){
+            resp.sendRedirect("/insertUser");
         }
     }
 }
